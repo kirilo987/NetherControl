@@ -2,7 +2,9 @@ package org.kxysl1k.netherControl;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.block.Block;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -20,6 +22,7 @@ public class NetherControl extends JavaPlugin implements Listener {
     public void onEnable() {
         this.saveDefaultConfig();
         isNetherOpen = this.getConfig().getBoolean("nether-open", false);
+
         getLogger().info("NetherControl включен! Состояние ада: " + (isNetherOpen ? "открыто" : "закрыто"));
         Bukkit.getPluginManager().registerEvents(this, this);
         this.getCommand("nether").setExecutor(this);
@@ -87,7 +90,14 @@ public class NetherControl extends JavaPlugin implements Listener {
         if (event.getTo() != null && event.getTo().getWorld().getEnvironment() == World.Environment.NETHER) {
             if (!isNetherOpen) {
                 event.setCancelled(true);
-                event.getPlayer().sendMessage("§cТелепортация в ад запрещена!");
+
+                // Ломаем портал
+                Block portalBlock = event.getFrom().getBlock();
+                if (portalBlock.getType() == Material.NETHER_PORTAL) {
+                    portalBlock.setType(Material.AIR);
+                }
+
+                event.getPlayer().sendMessage("§cТелепортация в ад запрещена! Портал сломан.");
             }
         }
     }
@@ -98,6 +108,7 @@ public class NetherControl extends JavaPlugin implements Listener {
         if (player.getWorld().getEnvironment() == World.Environment.NETHER) {
             World overworld = Bukkit.getWorlds().get(0);
             Location spawnLocation = overworld.getSpawnLocation();
+
             Location bedSpawn = player.getBedSpawnLocation();
             if (bedSpawn != null && bedSpawn.getWorld().getEnvironment() == World.Environment.NORMAL) {
                 event.setRespawnLocation(bedSpawn);

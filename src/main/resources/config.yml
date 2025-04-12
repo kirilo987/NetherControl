@@ -1,1 +1,3 @@
-nether-open: false
+nether-open: true
+end-open: true
+language: en

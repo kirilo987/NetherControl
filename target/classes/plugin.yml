@@ -9,6 +9,20 @@ description: Plugin By Kxysl1k
 website: https://kxysl1k.netlify.app/
 
 commands:
-  nether:
-    description: "Открыть или закрыть доступ к аду."
-    usage: /nether <open|close>
+  worldcontrol:
+    description: Controls access to Nether and End
+    usage: /worldcontrol <nether|end> <open|close> or /worldcontrol reload
+    permission: worldcontrol.admin
+permissions:
+  worldcontrol.admin:
+    description: Full access to WorldControl
+    default: op
+  worldcontrol.nether:
+    description: Permission to open/close Nether
+    default: op
+  worldcontrol.end:
+    description: Permission to open/close End
+    default: op
+  worldcontrol.reload:
+    description: Permission to reload configuration and language
+    default: op
